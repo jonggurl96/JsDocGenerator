@@ -2,6 +2,8 @@
 
 > Javascript Document Generator
 > 
+> - Shortcut: Alt + D
+> 
 > **From.**
 > 
 > ```java

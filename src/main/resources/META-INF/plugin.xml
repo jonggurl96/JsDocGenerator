@@ -26,4 +26,5 @@
 	<extensions defaultExtensionNs="com.intellij">
 
   </extensions>
-</idea-plugin>
+<actions><action id="Converter" class="jsdoc.gen.jsdocgenerator.JsDocConverter" text="Generate Js Doc From Java Class" description="Generate Js Doc From Java Class on Clipboard"><keyboard-shortcut
+		keymap="$default" first-keystroke="alt D"/></action></actions></idea-plugin>
