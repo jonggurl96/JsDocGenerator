@@ -48,7 +48,7 @@ class JsDocConverter : AnAction() {
         // 5. Generate JsDoc
         val jsDoc = """
             /**
-             * @typedef {Object} ${psiClass.name} ${psiClass.docComment?.text}
+             * @typedef {Object} ${psiClass.name}
              $memberInfo
              */
         """.trimIndent()
