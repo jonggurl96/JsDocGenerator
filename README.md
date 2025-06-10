@@ -43,7 +43,7 @@
 
 ### 1. com.intellij.psi
 > ###### build.gradle.kts
-> If don`t add build plugin "com.intellij.java", can`t use PsiJavaFile
+> If don\`t add build plugin "com.intellij.java", can\`t use PsiJavaFile
 > ```groovy
 > dependencies {
 >     intellijPlatform {
@@ -56,3 +56,11 @@
 
 ### 2. org.jetbrains.kotlin.com.intellij.psi
 > _kotlin-compiler-embeddable_ >>> ***Never Use!!!***
+
+### 3. plugins.xml dependency
+> ```xml
+> <depends>com.intellij.modules.java</depends>
+> <depends>com.intellij.modules.lang</depends>
+> <depends>com.intellij.modules.platform</depends>
+> ```
+
