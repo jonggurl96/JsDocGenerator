@@ -1,6 +1,13 @@
 package jsdoc.gen.jsdocgenerator;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.List;
+
 /**
  * <h1>Test</h1>
  * <hr>
@@ -10,6 +17,10 @@ package jsdoc.gen.jsdocgenerator;
  * @version 1.0.0
  * @since 2025.05.19(월) 오후 5:15
  */
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Test {
 	
 	/**
@@ -22,27 +33,9 @@ public class Test {
 	 */
 	private int age;
 	
-	public Test() {}
-	
-	public Test(String name, int age) {
-		this.name = name;
-		this.age = age;
-	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	public int getAge() {
-		return age;
-	}
-	
-	public void setAge(int age) {
-		this.age = age;
-	}
+	/**
+	 * 별명
+	 */
+	private List<String> nicknames;
 	
 }
