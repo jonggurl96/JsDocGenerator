@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <h1>Test</h1>
@@ -37,5 +38,10 @@ public class Test {
 	 * 별명
 	 */
 	private List<String> nicknames;
+	
+	/**
+	 * 갯수
+	 */
+	private Map<String, Integer> count;
 	
 }

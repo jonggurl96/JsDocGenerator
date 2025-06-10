@@ -6,6 +6,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.intellij.psi.PsiClass
+import com.intellij.psi.PsiField
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiJavaFile
 import java.awt.Toolkit
@@ -42,7 +43,7 @@ class JsDocConverter : AnAction() {
         // 4. Get File Members
         val memberInfo: String = psiClass
             .fields
-            .map { field -> " * @property {${field.type.presentableText}} ${field.name} ${field.docComment?.text}" }
+            .map { this::generatePropertyDocString }
             .joinToString { "\n" }
 
         // 5. Generate JsDoc
@@ -60,6 +61,38 @@ class JsDocConverter : AnAction() {
 
         Messages.showMessageDialog(project, "Copied JsDoc to Clipboard.", "JsDoc Copied!", Messages.getInformationIcon())
     }
+
+    private fun generatePropertyDocString(field: PsiField): String {
+        val presentableText = field.type.presentableText
+        val propertyType = generatePropertyTypeDocString(presentableText)
+
+        val propertyDoc = field.docComment?.text
+
+        return " * @property {$propertyType} ${field.name} $propertyDoc".trimEnd()
+    }
+
+    private fun generatePropertyTypeDocString(type: String): String {
+        if("<" in type) {
+            if("List<" in type) {
+                return generatePropertyTypeDocString(type.substringAfter("List<").substringBefore(">")) + "[]"
+            }
+            if("Map<" in type) {
+                // K, V
+                val entry = type.substringAfter("List<").substringBefore(">")
+                val keyType = generatePropertyTypeDocString(entry.substringBefore(","))
+                val valueType = generatePropertyTypeDocString(entry.substringAfter(",").trim())
+                return "Object.<$keyType, $valueType>"
+            }
+            return "?"
+        }
+
+        return when(type) {
+            "String" -> "string"
+            "int", "Integer", "double", "Double", "float", "Float", "BigDecimal", "BigInteger", "Number" -> "number"
+            else -> "?"
+        }
+    }
+
 
     private fun showError(project: Project, message: String) {
         Messages.showMessageDialog(project, message, "Generate JsDoc Error", Messages.getErrorIcon())
