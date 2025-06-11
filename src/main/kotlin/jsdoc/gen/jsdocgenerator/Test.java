@@ -6,8 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 
 /**
  * <h1>Test</h1>
@@ -37,11 +38,15 @@ public class Test {
 	/**
 	 * 별명
 	 */
-	private List<String> nicknames;
+	private ArrayList<String> nicknames;
+	
+	private HashMap<String, Integer> count;
 	
 	/**
-	 * 갯수
+	 * 다른 프로퍼티들
+	 * <p>
+	 * 공백은 어떻게 될 지 궁금함
 	 */
-	private Map<String, Integer> count;
+	private ArrayList<HashMap<String, LinkedList<String>>> otherProperties;
 	
 }

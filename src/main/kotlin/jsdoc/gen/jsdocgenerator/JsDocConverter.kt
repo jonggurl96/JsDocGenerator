@@ -41,18 +41,15 @@ class JsDocConverter : AnAction() {
         }
 
         // 4. Get File Members
-        val memberInfo: String = psiClass
-            .fields
-            .map { this::generatePropertyDocString }
-            .joinToString { "\n" }
+        val memberInfo: String = psiClass.fields.joinToString("\n") { field -> "|" + this.generatePropertyDocString(field) }
 
         // 5. Generate JsDoc
         val jsDoc = """
-            /**
-             * @typedef {Object} ${psiClass.name}
-             $memberInfo
-             */
-        """.trimIndent()
+            |/**
+            | * @typedef {Object} ${psiClass.name}
+            $memberInfo
+            | */
+        """.trimMargin()
 
         // 6. Copy to Clipboard
         val clipboard = Toolkit.getDefaultToolkit().systemClipboard
@@ -66,19 +63,18 @@ class JsDocConverter : AnAction() {
         val presentableText = field.type.presentableText
         val propertyType = generatePropertyTypeDocString(presentableText)
 
-        val propertyDoc = field.docComment?.text
-
-        return " * @property {$propertyType} ${field.name} $propertyDoc".trimEnd()
+        return " * @property {$propertyType} ${field.name} ${parseDocCommentText(field.docComment?.text)}".trimEnd()
     }
 
     private fun generatePropertyTypeDocString(type: String): String {
         if("<" in type) {
-            if("List<" in type) {
-                return generatePropertyTypeDocString(type.substringAfter("List<").substringBefore(">")) + "[]"
+            val prefix = type.substringBefore("<")
+            if("List" in prefix) {
+                return generatePropertyTypeDocString(type.substringAfter("List<").substringBeforeLast(">")) + "[]"
             }
-            if("Map<" in type) {
+            if("Map" in prefix) {
                 // K, V
-                val entry = type.substringAfter("List<").substringBefore(">")
+                val entry = type.substringAfter("Map<").substringBefore(">")
                 val keyType = generatePropertyTypeDocString(entry.substringBefore(","))
                 val valueType = generatePropertyTypeDocString(entry.substringAfter(",").trim())
                 return "Object.<$keyType, $valueType>"
@@ -91,6 +87,14 @@ class JsDocConverter : AnAction() {
             "int", "Integer", "double", "Double", "float", "Float", "BigDecimal", "BigInteger", "Number" -> "number"
             else -> "?"
         }
+    }
+
+    private fun parseDocCommentText(docComment: String?): String {
+        return if(docComment.isNullOrEmpty()) "" else docComment
+            .split("\n")
+            .map { it.replace("/**", "").replace("*/", "").substringAfter("*").trim() }
+            .filter { it.isNotEmpty() }
+            .joinToString(" ")
     }
 
 
